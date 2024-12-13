@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CustomTextField: View {
     var image: String
-    @State var text: String
+    @Binding var text: String
     var placehorder: String
     var body: some View {
         ZStack(alignment: .leading){
@@ -37,5 +37,6 @@ struct CustomTextField: View {
 }
 
 #Preview {
-    CustomTextField(image:"SRTLogo", text: "", placehorder: "Enter text")
+    @Previewable @State var sampleText: String = ""
+    CustomTextField(image:"SRTLogo", text: $sampleText, placehorder: "Enter text")
 }

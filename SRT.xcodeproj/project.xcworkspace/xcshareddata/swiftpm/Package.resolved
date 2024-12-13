@@ -1,0 +1,24 @@
+{
+  "originHash" : "730954c98211394705d73c8ee0dcae1e31a418112a0fdffbfcc9445e93662c5b",
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "revision" : "e16d3481f5ed35f0472cb93350085853d754913f",
+        "version" : "5.10.1"
+      }
+    },
+    {
+      "identity" : "swiftkeychainwrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jrendel/SwiftKeychainWrapper",
+      "state" : {
+        "revision" : "185a3165346a03767101c4f62e9a545a0fe0530f",
+        "version" : "4.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}

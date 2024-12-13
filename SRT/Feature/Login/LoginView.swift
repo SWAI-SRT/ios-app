@@ -6,58 +6,68 @@
 //
 
 import SwiftUI
+import SwiftKeychainWrapper
 
 struct LoginView: View {
     @StateObject var loginViewModel = LoginViewModel()
     
     var body: some View {
-        
-        NavigationStack{
-            VStack{
+        NavigationStack {
+            VStack {
                 Spacer()
-                    .frame(height: 70)
+                    .frame(height: 20)
                 Text("로그인")
-                    .font(.system(size: 28,weight: .bold))
+                    .font(.system(size: 28, weight: .bold))
                     .customGradient()
                 
                 Spacer()
                     .frame(height: 100)
                 
-                CustomTextField(image: "EmailLogo", text: loginViewModel.email, placehorder: "example@gmail.com")
+                CustomTextField(image: "EmailLogo", text: $loginViewModel.email, placehorder: "example@gmail.com")
                 
                 Spacer()
                     .frame(height: 30)
                 
-                CustomSecureField(image: "PasswordLogo", text: loginViewModel.password, placehorder: "********")
+                CustomSecureField(image: "PasswordLogo", text: $loginViewModel.password, placehorder: "********")
                 
                 Spacer()
-                    .frame(height: 200)
+                    .frame(height: 100)
                 
-                NavigationLink{
-                    ReportView()
-                        .navigationBarBackButtonHidden()
-                }label:{
-                    CustomButton(label: "로그인")
-                }
+                CustomButton(action: {
+                    loginViewModel.signin()
+                }, label: "로그인")
                 
-                HStack{
+                HStack {
                     Text("아직 계정이 없으신가요?")
                     
-                    NavigationLink{
+                    NavigationLink {
                         SignupView()
                             .navigationBarBackButtonHidden()
-                    }label: {
+                    } label: {
                         Text("회원가입하기")
                             .foregroundColor(.gradient2)
                             .underline()
                     }
                 }
             }
+            .onAppear{
+                loginViewModel.tokenCheck()
+            }
+            .alert(isPresented: $loginViewModel.showAlert) {
+                Alert(
+                    title: Text("알림"),
+                    message: Text(loginViewModel.alertMessage),
+                    dismissButton: .default(Text("확인"))
+                )
+            }
+            .navigationDestination(isPresented: $loginViewModel.loginOK) {
+                ReportView()
+            }
         }
     }
 }
 
+
 #Preview {
     LoginView()
-//        .environmentObject(PathModel())
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CustomSecureField: View {
     var image: String
-    @State var text: String
+    @Binding var text: String
     var placehorder: String
     var body: some View {
         ZStack(alignment: .leading){
@@ -37,5 +37,6 @@ struct CustomSecureField: View {
 }
 
 #Preview {
-    CustomSecureField(image:"SRTLogo", text: "", placehorder: "Enter text")
+    @Previewable @State var sampleText: String = ""
+    CustomSecureField(image:"SRTLogo",text: $sampleText, placehorder: "Enter text")
 }

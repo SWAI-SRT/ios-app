@@ -2,13 +2,15 @@ import SwiftUI
 import AVFoundation
 
 struct SnapView: View {
-    @StateObject var camera = CameraModel()
+    @StateObject private var camera = CameraModel()
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    private let locationManager = LocationManager()
     
     @State private var showCapturedImage = false
+    @State private var capturedData: PhotoCaptureData?
     
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack {
                 HStack {
                     Button(action: {
@@ -16,55 +18,63 @@ struct SnapView: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .resizable()
-                            .frame(width: 15,height: 30)
-                            .foregroundStyle(.black)
+                            .frame(width: 15, height: 30)
+                            .foregroundColor(.black)
                     }
-                    .padding(.leading,30)
-                    
+                    .padding(.leading, 30)
                     Spacer()
                 }
                 
                 Spacer()
                 
-                ZStack{
+                ZStack {
                     Rectangle()
                         .frame(width: 400, height: 450)
+                        .foregroundColor(.gray.opacity(0.2))
+                        .cornerRadius(10)
+                    
                     CameraPreviewLayer(session: camera.session)
                         .frame(height: 400)
                         .cornerRadius(10)
                         .onAppear {
-                            camera.Check()
+                            camera.checkPermissions()
                         }
                 }
                 
                 Spacer()
                 
-                Button(action: {
-                    camera.takePicture()
-                }) {
+                Button(action: capturePhoto) {
                     Image("SRTLogo")
                         .resizable()
-                        .frame(width: 50, height: 50)
+                        .frame(width: 60, height: 60)
                         .foregroundColor(.blue)
                         .padding()
                 }
-                .onReceive(camera.$photoData) { photoData in
-                    if photoData != nil {
-                        self.showCapturedImage = true
-                    }
-                }
+                
+                NavigationLink(
+                    destination: CapturedImageView(imageData: capturedData?.imageData ?? Data()),
+                    isActive: $showCapturedImage,
+                    label: { EmptyView() }
+                )
             }
             .background(Color.white.ignoresSafeArea())
             .alert(isPresented: $camera.alert) {
-                Alert(title: Text("카메라 접근이 거부되었습니다"), message: Text("설정에서 카메라 접근 권한을 허용해 주세요."), dismissButton: .default(Text("확인")))
+                Alert(title: Text("카메라 접근 거부"),
+                      message: Text("설정에서 카메라 접근 권한을 허용해주세요."),
+                      dismissButton: .default(Text("확인")))
             }
-            NavigationLink(
-                destination: CapturedImageView(imageData: camera.photoData ?? Data()),
-                isActive: $showCapturedImage,
-                label: {
-                    EmptyView()
-                }
-            )
+        }
+    }
+    
+    private func capturePhoto() {
+        camera.takePicture()
+        locationManager.fetchCurrentLocation { latitude, longitude in
+            if let imageData = camera.photoData {
+                let captureData = PhotoCaptureData(imageData: imageData, latitude: latitude, longitude: longitude)
+                NetworkService.sendCapturedData(captureData)
+                self.capturedData = captureData
+                self.showCapturedImage = true
+            }
         }
     }
 }
@@ -74,18 +84,14 @@ struct CameraPreviewLayer: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UIView {
         let view = UIView(frame: UIScreen.main.bounds)
-        
         let previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer.frame = view.frame
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
-        
         return view
     }
     
-    func updateUIView(_ uiView: UIView, context: Context) {
-        
-    }
+    func updateUIView(_ uiView: UIView, context: Context) {}
 }
 
 struct SnapView_Previews: PreviewProvider {

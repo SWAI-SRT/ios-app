@@ -11,15 +11,16 @@ struct StartView: View {
     var body: some View {
         NavigationStack{
             VStack{
+                
                 Spacer()
-                    .frame(height: 100)
+                    .frame(height: 10)
                 Image("SRTLogo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 230)
+                    .frame(width: 200)
                 
                 Spacer()
-                    .frame(height: 200)
+                    .frame(height: 150)
                 
                 HStack{
                     Text("Safety Report")
@@ -28,7 +29,7 @@ struct StartView: View {
                     Text("SRT")
                         .font(.system(size: 32,weight: .bold))
                         .customGradient(style: .foreground)
-                }
+                }   
                 
                 NavigationLink{
                     LoginView()
@@ -36,17 +37,6 @@ struct StartView: View {
                 }label:{
                     CustomButton(label: "시작하기")
                 }
-                
-                Spacer()
-                    .frame(height: 50)
-                
-                Button(
-                    action: {},
-                    label: {
-                        Text("도움말 보기")
-                            .foregroundStyle(.gray.opacity(0.5))
-                    }
-                )
             }
         }
     }

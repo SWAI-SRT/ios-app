@@ -18,6 +18,28 @@ struct ReportView: View {
     
     var body: some View {
         VStack{
+            Spacer()
+                .frame(height: 20)
+            HStack{
+                Spacer()
+                    .frame(width: 30)
+                
+                NavigationLink{
+                    UserView()
+                        .navigationBarBackButtonHidden()
+                }label: {
+                    Image(systemName: "text.justify")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 25)
+                        .foregroundStyle(.black)
+                }
+                
+                Spacer()
+            }
+            Spacer()
+                .frame(height: 80)
+            
             Text("긴급 상황이 발생하였나요?")
                 .font(.system(size: 28))
                 .customGradient()
@@ -28,7 +50,7 @@ struct ReportView: View {
                 )
             
             Spacer()
-                .frame(height: 100)
+                .frame(height: 50)
             
             NavigationLink{
                 SnapView()
@@ -50,7 +72,7 @@ struct ReportView: View {
             }
             
             Spacer()
-                .frame(height: 40)
+                .frame(height: 50)
             
             HStack{
                 Image("WaringLogo")
@@ -64,7 +86,9 @@ struct ReportView: View {
                 }
                 .foregroundStyle(.gradient2)
             }
+            Spacer()
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		066029B52CE75D2400335C96 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 066029B42CE75D2400335C96 /* Alamofire */; };
+		06DC29F02CE96E8D0043BC23 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 06DC29EF2CE96E8D0043BC23 /* SwiftKeychainWrapper */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		064AD3CB2C9C736F0074EDD6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06DC29F02CE96E8D0043BC23 /* SwiftKeychainWrapper in Frameworks */,
+				066029B52CE75D2400335C96 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +132,8 @@
 			);
 			name = SRT;
 			packageProductDependencies = (
+				066029B42CE75D2400335C96 /* Alamofire */,
+				06DC29EF2CE96E8D0043BC23 /* SwiftKeychainWrapper */,
 			);
 			productName = SRT;
 			productReference = 064AD3BA2C9C736E0074EDD6 /* SRT.app */;
@@ -208,6 +217,10 @@
 			);
 			mainGroup = 064AD3B12C9C736E0074EDD6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				066029B32CE75D2400335C96 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				06DC29EE2CE96E8D0043BC23 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 064AD3BB2C9C736E0074EDD6 /* Products */;
 			projectDirPath = "";
@@ -413,7 +426,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SRT/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 기반으로 신고 데이터에 저장이 되어 권한이 필요합니다";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -444,7 +459,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SRT/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 기반으로 신고 데이터에 저장이 되어 권한이 필요합니다";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -571,6 +588,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		066029B32CE75D2400335C96 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.1;
+			};
+		};
+		06DC29EE2CE96E8D0043BC23 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		066029B42CE75D2400335C96 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 066029B32CE75D2400335C96 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		06DC29EF2CE96E8D0043BC23 /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 06DC29EE2CE96E8D0043BC23 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 064AD3B22C9C736E0074EDD6 /* Project object */;
 }
