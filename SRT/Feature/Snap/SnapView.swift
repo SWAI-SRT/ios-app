@@ -6,8 +6,10 @@ struct SnapView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     private let locationManager = LocationManager()
     
-    @State private var showCapturedImage = false
-    @State private var capturedData: PhotoCaptureData?
+    @State private var isLoading = false
+    @State private var showCompleteView = false
+    @State private var capturedImageData: Data = Data()
+    @State private var resultData: [String:Any] = [:]
     
     var body: some View {
         NavigationStack {
@@ -50,12 +52,6 @@ struct SnapView: View {
                         .foregroundColor(.blue)
                         .padding()
                 }
-                
-                NavigationLink(
-                    destination: CapturedImageView(imageData: capturedData?.imageData ?? Data()),
-                    isActive: $showCapturedImage,
-                    label: { EmptyView() }
-                )
             }
             .background(Color.white.ignoresSafeArea())
             .alert(isPresented: $camera.alert) {
@@ -63,17 +59,30 @@ struct SnapView: View {
                       message: Text("설정에서 카메라 접근 권한을 허용해주세요."),
                       dismissButton: .default(Text("확인")))
             }
+            .fullScreenCover(isPresented: $isLoading) {
+                LoadingView() 
+            }
+            .navigationDestination(isPresented: $showCompleteView) {
+                CompleteView(initialResultData: resultData, imageData: capturedImageData)
+            }
         }
     }
     
     private func capturePhoto() {
-        camera.takePicture()
-        locationManager.fetchCurrentLocation { latitude, longitude in
-            if let imageData = camera.photoData {
+        isLoading = true
+        
+        camera.takePicture{ imageData in
+            self.capturedImageData = imageData
+            locationManager.fetchCurrentLocation { latitude, longitude in
                 let captureData = PhotoCaptureData(imageData: imageData, latitude: latitude, longitude: longitude)
-                NetworkService.sendCapturedData(captureData)
-                self.capturedData = captureData
-                self.showCapturedImage = true
+                NetworkService.sendCapturedData(captureData){ result in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.resultData = result
+                        print(resultData)
+                        isLoading = false
+                        showCompleteView = true
+                    }
+                }
             }
         }
     }

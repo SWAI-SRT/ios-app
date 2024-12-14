@@ -30,35 +30,41 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     }
     
     private func setUpSession() {
-        do {
-            session.beginConfiguration()
-            
-            guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
-                print("No camera found.")
-                return
+        DispatchQueue.global(qos: .background).async {
+            do {
+                self.session.beginConfiguration()
+                
+                guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+                    print("No camera found.")
+                    return
+                }
+                
+                let input = try AVCaptureDeviceInput(device: device)
+                if self.session.canAddInput(input) {
+                    self.session.addInput(input)
+                }
+                
+                if self.session.canAddOutput(self.output) {
+                    self.session.addOutput(self.output)
+                }
+                
+                self.session.commitConfiguration()
+                self.session.startRunning() // 백그라운드 스레드에서 호출
+            } catch {
+                print("Camera setup error: \(error.localizedDescription)")
             }
-            
-            let input = try AVCaptureDeviceInput(device: device)
-            if session.canAddInput(input) {
-                session.addInput(input)
-            }
-            
-            if session.canAddOutput(output) {
-                session.addOutput(output)
-            }
-            
-            session.commitConfiguration()
-            session.startRunning()
-        } catch {
-            print("Camera setup error: \(error.localizedDescription)")
         }
     }
+
     
-    func takePicture() {
+    func takePicture(completion: @escaping (Data) -> Void) {
         let settings = AVCapturePhotoSettings()
         settings.flashMode = .auto
         output.capturePhoto(with: settings, delegate: self)
+        self.photoCompletion = completion
     }
+    
+    private var photoCompletion: ((Data) -> Void)?
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation(), error == nil else {
@@ -66,6 +72,7 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             return
         }
         DispatchQueue.main.async {
+            self.photoCompletion?(imageData)
             self.photoData = imageData
         }
     }
